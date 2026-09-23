@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mind Map Notes</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --bg:      #120d24;
+  --bg2:     #1a1035;
+  --surface: #231847;
+  --surface2:#2d1f5e;
+  --violet:  #7c3aed;
+  --violet2: #6d28d9;
+  --coral:   #f97316;
+  --mint:    #10b981;
+  --sky:     #38bdf8;
+  --pink:    #ec4899;
+  --yellow:  #fbbf24;
+  --text:    #f5f0ff;
+  --muted:   #a89bc2;
+  --line:    rgba(124,58,237,.25);
+  --correct: #10b981;
+  --wrong:   #ef4444;
+}
+*,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+
+/* ── NAV ── */
+#nav {
+  position: sticky; top:0; z-index:200;
+  background: rgba(18,13,36,.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap:.3rem;
+  padding: 0 1rem;
+  overflow-x: auto; scrollbar-width:none;
+}
+#nav::-webkit-scrollbar { display:none; }
+.nav-btn {
+  padding: .6rem .95rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 700; font-size: .8rem;
+  color: var(--muted);
+  background: transparent; border: none;
+  cursor: pointer; white-space: nowrap;
+  border-bottom: 2.5px solid transparent;
+  transition: all .2s;
+}
+.nav-btn:hover { color: var(--text); }
+.nav-btn.active { color: var(--violet); border-bottom-color: var(--violet); }
+
+/* ── SECTIONS ── */
+.section { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; }
+.inner { max-width: 860px; margin: 0 auto; padding: 3rem 1.5rem; width: 100%; }
+
+/* ── HERO ── */
+#hero {
+  background: var(--bg);
+  position: relative; overflow: hidden;
+  text-align: center;
+}
+#hero-canvas {
+  position: absolute; inset:0; width:100%; height:100%;
+  pointer-events: none; opacity: .35;
+}
+.hero-inner { position: relative; z-index:1; padding: 5rem 1.5rem 4rem; }
+.hero-tag {
+  display: inline-block;
+  font-family: 'Nunito', sans-serif;
+  font-size: .78rem; font-weight: 800;
+  color: var(--violet);
+  background: rgba(124,58,237,.15);
+  border: 1px solid rgba(124,58,237,.3);
+  border-radius: 50px;
+  padding: .28rem 1rem;
+  letter-spacing: .06em;
+  margin-bottom: 1.2rem;
+}
+.hero-title {
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(3rem, 9vw, 6rem);
+  font-weight: 900;
+  line-height: .95;
+  color: var(--text);
+  margin-bottom: 1rem;
+}
+.hero-title em { color: var(--violet); font-style: normal; }
+.hero-sub {
+  font-size: 1.1rem; color: var(--muted);
+  max-width: 480px; margin: 0 auto 2rem;
+  line-height: 1.7;
+}
+.hero-btn {
+  display: inline-block;
+  background: var(--violet);
+  color: white;
+  border: none; border-radius: 50px;
+  padding: .8rem 2rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 800; font-size: 1rem;
+  cursor: pointer;
+  transition: all .2s;
+  box-shadow: 0 4px 24px rgba(124,58,237,.4);
+}
+.hero-btn:hover { background: var(--violet2); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(124,58,237,.5); }
+
+/* ── SECTION HEADERS ── */
+.sec-eyebrow {
+  font-family: 'Nunito', sans-serif;
+  font-size: .75rem; font-weight: 800;
+  color: var(--violet);
+  letter-spacing: .1em;
+  margin-bottom: .5rem;
+  display: flex; align-items: center; gap: .5rem;
+}
+.sec-eyebrow::before { content:''; width:24px; height:2px; background:var(--violet); border-radius:2px; }
+.sec-title {
+  font-family: 'Nunito', sans-serif;
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 900; line-height: 1.1;
+  margin-bottom: .75rem;
+}
+.sec-body { font-size: 1rem; color: var(--muted); line-height: 1.75; max-width: 560px; margin-bottom: 2rem; }
+
+/* ── WHAT IS — THREE PILLARS ── */
+.pillars { display: grid; grid-template-columns: repeat(3,1fr); gap: 1rem; margin: 2rem 0; }
+.pillar {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.6rem 1.2rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  transition: transform .2s, border-color .2s;
+}
+.pillar:hover { transform: translateY(-4px); border-color: var(--violet); }
+.pillar-dot {
+  width: 56px; height: 56px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.7rem; margin: 0 auto .9rem;
+}
+.pillar-title { font-family:'Nunito',sans-serif; font-weight:800; font-size:1.05rem; margin-bottom:.3rem; }
+.pillar-body { font-size:.87rem; color:var(--muted); line-height:1.55; }
+.p-colors .pillar-dot { background:rgba(251,191,36,.15); }
+.p-words  .pillar-dot { background:rgba(56,189,248,.15); }
+.p-pics   .pillar-dot { background:rgba(236,72,153,.15); }
+
+/* ── LIVE MIND MAP DEMO ── */
+.map-demo-wrap {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 1.2rem;
+  margin: 1.5rem 0;
+  overflow: hidden;
+}
+#demo-svg { width:100%; height:420px; display:block; }
+
+/* ── STEPS ── */
+.steps { display:flex; flex-direction:column; gap:1.2rem; margin:2rem 0; }
+.step {
+  display:grid; grid-template-columns: 52px 1fr;
+  gap: 1.1rem; align-items: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.3rem 1.4rem;
+  transition: border-color .2s;
+}
+.step:hover { border-color: var(--violet); }
+.step-num {
+  width:52px; height:52px; border-radius:50%;
+  background: var(--violet);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Nunito',sans-serif; font-weight:900; font-size:1.3rem;
+  color: white; flex-shrink:0;
+  box-shadow: 0 4px 16px rgba(124,58,237,.4);
+}
+.step-title { font-family:'Nunito',sans-serif; font-weight:800; font-size:1.05rem; margin-bottom:.3rem; }
+.step-body { font-size:.9rem; color:var(--muted); line-height:1.65; }
+.step-tip {
+  margin-top:.6rem; padding:.5rem .8rem;
+  background:rgba(124,58,237,.12);
+  border-left:3px solid var(--violet);
+  border-radius:0 8px 8px 0;
+  font-size:.82rem; color:var(--text);
+  line-height:1.5;
+}
+
+/* ── STRONG vs WEAK ── */
+.compare { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin:1.5rem 0; }
+.comp-card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.4rem;
+}
+.comp-card.strong { border-color: rgba(16,185,129,.35); }
+.comp-card.weak   { border-color: rgba(239,68,68,.25); }
+.comp-label {
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:.8rem;
+  letter-spacing:.06em; margin-bottom:.9rem;
+  display:flex; align-items:center; gap:.5rem;
+}
+.comp-label.s { color: var(--mint); }
+.comp-label.w { color: #ef4444; }
+.comp-svg { width:100%; height:260px; display:block; }
+
+/* ── QUIZ (agreement style) ── */
+.quiz-section {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  padding: 1.6rem;
+  margin: 1.5rem 0;
+}
+.quiz-section h3 {
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:1.2rem;
+  margin-bottom:.25rem;
+}
+.quiz-sub { font-size:.87rem; color:var(--muted); margin-bottom:1.1rem; }
+.qq {
+  background:var(--bg2); border:1.5px solid var(--line);
+  border-radius:12px; padding:1rem 1.1rem; margin:.7rem 0;
+  transition: border-color .25s, background .25s;
+}
+.qq.q-correct { border-color:var(--correct); background:rgba(16,185,129,.08); }
+.qq.q-wrong   { border-color:var(--wrong);   background:rgba(239,68,68,.06); }
+.qq-num-text { display:flex; align-items:baseline; gap:.45rem; margin-bottom:.65rem; }
+.qq-num {
+  font-family:'Nunito',sans-serif; font-weight:900; font-size:.8rem;
+  background:var(--violet); color:white;
+  width:24px; height:24px;
+  display:flex; align-items:center; justify-content:center;
+  border-radius:50%; flex-shrink:0;
+}
+.qq-text { font-weight:600; font-size:.95rem; line-height:1.5; }
+.qq-opts { display:flex; flex-wrap:wrap; gap:.4rem; }
+.qq-opt {
+  background:var(--surface2); border:1.5px solid var(--line);
+  border-radius:50px; padding:.36rem .85rem;
+  font-family:'DM Sans',sans-serif; font-weight:600; font-size:.87rem;
+  cursor:pointer; transition:all .15s; color:var(--text);
+}
+.qq-opt:hover:not(:disabled) { border-color:var(--violet); background:rgba(124,58,237,.15); }
+.qq-opt.opt-correct { background:var(--correct); border-color:var(--correct); color:white; }
+.qq-opt.opt-wrong   { background:var(--wrong);   border-color:var(--wrong);   color:white; }
+.qq-opt.opt-reveal  { background:var(--correct); border-color:var(--correct); color:white; }
+.qq-opt:disabled { cursor:default; }
+.qq-exp { margin-top:.55rem; padding:.45rem .7rem; font-size:.84rem; font-weight:600; line-height:1.5; display:none; border-radius:6px; }
+.qq-exp.show { display:block; }
+.qq-exp.correct { background:rgba(16,185,129,.12); color:var(--mint); }
+.qq-exp.wrong   { background:rgba(239,68,68,.08);  color:#ff8a80; }
+.score-bar {
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--bg); border-radius:12px;
+  padding:.8rem 1.1rem; margin-top:1.1rem; flex-wrap:wrap; gap:.5rem;
+}
+.score-display {
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:1.15rem;
+  color:var(--violet);
+}
+.score-kernels { font-size:1.2rem; letter-spacing:1px; }
+.reset-btn {
+  background:var(--violet); color:white; border:none; border-radius:50px;
+  padding:.38rem 1rem; font-family:'Nunito',sans-serif; font-weight:700; font-size:.8rem;
+  cursor:pointer; transition:all .2s;
+}
+.reset-btn:hover { background:var(--violet2); transform:translateY(-1px); }
+
+/* ── INTERACTIVE BUILDER ── */
+#builder-section { background: var(--bg2); }
+.builder-wrap {
+  background: var(--bg);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  padding: 1.2rem;
+  margin: 1.5rem 0;
+  position: relative;
+}
+#map-canvas {
+  width: 100%; height: 480px;
+  border-radius: 14px;
+  background: radial-gradient(ellipse at center, #1e1540 0%, var(--bg) 70%);
+  display: block; cursor: default;
+}
+.builder-controls {
+  display: flex; gap: .6rem; flex-wrap: wrap;
+  margin-top: .9rem; align-items: center;
+}
+.ctrl-btn {
+  background: var(--surface); border: 1.5px solid var(--line);
+  color: var(--muted); border-radius: 50px;
+  padding: .38rem .9rem; font-family:'Nunito',sans-serif;
+  font-weight:700; font-size:.8rem; cursor:pointer;
+  transition: all .2s;
+}
+.ctrl-btn:hover { border-color:var(--violet); color:var(--violet); }
+.ctrl-btn.active { background:var(--violet); border-color:var(--violet); color:white; }
+.builder-hint {
+  font-size:.82rem; color:var(--muted); flex:1; text-align:right;
+  font-style: italic;
+}
+
+/* ── CANVA STEPS ── */
+.canva-steps { display:flex; flex-direction:column; gap:.8rem; margin:1.5rem 0; }
+.canva-step {
+  display:grid; grid-template-columns:36px 1fr;
+  gap:.9rem; align-items:center;
+  background:var(--surface); border:1px solid var(--line);
+  border-radius:12px; padding:1rem 1.2rem;
+}
+.canva-num {
+  width:36px; height:36px; border-radius:50%;
+  background:rgba(124,58,237,.2); border:2px solid var(--violet);
+  display:flex; align-items:center; justify-content:center;
+  font-family:'Nunito',sans-serif; font-weight:900; font-size:.9rem;
+  color:var(--violet); flex-shrink:0;
+}
+.canva-text { font-size:.92rem; color:var(--text); line-height:1.55; font-weight:500; }
+.canva-text strong { color:var(--violet); }
+
+/* ── POPCORN KERNELS ── */
+.kernel { display:inline-block; transition:transform .3s; }
+.kernel.popped { animation:kpop .4s cubic-bezier(.34,1.56,.64,1); }
+@keyframes kpop { 0%{transform:scale(0) translateY(6px);opacity:0} 60%{transform:scale(1.3) translateY(-4px);opacity:1} 100%{transform:scale(1);opacity:1} }
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .pillars { grid-template-columns:1fr; }
+  .compare { grid-template-columns:1fr; }
+  .step    { grid-template-columns:40px 1fr; }
+  .step-num{ width:40px; height:40px; font-size:1rem; }
+  #demo-svg{ height:280px; }
+  #map-canvas { height:360px; }
+  .inner   { padding:2rem 1rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <button class="nav-btn active" onclick="goTo('hero')">Home</button>
+  <button class="nav-btn" onclick="goTo('what')">What is it?</button>
+  <button class="nav-btn" onclick="goTo('see')">See one</button>
+  <button class="nav-btn" onclick="goTo('build')">How to build</button>
+  <button class="nav-btn" onclick="goTo('compare')">Strong vs Weak</button>
+  <button class="nav-btn" onclick="goTo('practice')">Practice</button>
+  <button class="nav-btn" onclick="goTo('builder')">Try it yourself</button>
+  <button class="nav-btn" onclick="goTo('task')">Your task</button>
+</nav>
+
+<!-- HERO -->
+<section class="section" id="hero" style="min-height:100vh;justify-content:center;">
+  <canvas id="hero-canvas"></canvas>
+  <div class="hero-inner">
+    <div class="hero-tag">Note-Taking Skill 02</div>
+    <h1 class="hero-title">Mind Map<br><em>Notes</em></h1>
+    <p class="hero-sub">Turn a page of notes into a picture your brain can actually remember.</p>
+    <button class="hero-btn" onclick="goTo('what')">Let's go</button>
+  </div>
+</section>
+
+<!-- WHAT IS A MIND MAP -->
+<section class="section" id="what" style="background:var(--bg2);">
+<div class="inner">
+  <div class="sec-eyebrow">The idea</div>
+  <h2 class="sec-title">What is a mind map?</h2>
+  <p class="sec-body">Instead of writing notes in one long list, a mind map spreads your ideas out like branches of a tree. Related ideas group together, and your brain can actually see how everything connects.</p>
+
+  <div class="pillars">
+    <div class="pillar p-colors">
+      <div class="pillar-dot">🎨</div>
+      <div class="pillar-title">Colors</div>
+      <div class="pillar-body">Use a different color for each branch. It helps your brain group and separate ideas at a glance.</div>
+    </div>
+    <div class="pillar p-words">
+      <div class="pillar-dot">✏️</div>
+      <div class="pillar-title">Keywords</div>
+      <div class="pillar-body">Write short keywords only. No full sentences. Your brain fills in the rest when you review.</div>
+    </div>
+    <div class="pillar p-pics">
+      <div class="pillar-dot">🖼️</div>
+      <div class="pillar-title">Pictures</div>
+      <div class="pillar-body">Add a small image to each branch. Visuals make information stick way longer than words alone.</div>
+    </div>
+  </div>
+
+  <div style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);border-radius:14px;padding:1.1rem 1.4rem;margin-top:1rem;">
+    <p style="font-size:.95rem;line-height:1.7;"><strong style="color:var(--violet);">Why does this work?</strong> Your brain remembers pictures and patterns much better than lists of words. Mind maps use both — so you remember more with less effort.</p>
+  </div>
+</div>
+</section>
+
+<!-- SEE ONE -->
+<section class="section" id="see">
+<div class="inner">
+  <div class="sec-eyebrow">See one first</div>
+  <h2 class="sec-title">What does a mind map look like?</h2>
+  <p class="sec-body">Here is an example of a 2026 Goals mind map. Notice how the main idea sits in the center, and every branch holds one topic with short details underneath it.</p>
+
+  <div class="map-demo-wrap">
+    <svg id="demo-svg" viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
+      <!-- Background -->
+      <rect width="700" height="420" fill="#1e1540" rx="14"/>
+
+      <!-- CENTER -->
+      <circle cx="350" cy="210" r="52" fill="#7c3aed" opacity=".9"/>
+      <text x="350" y="205" text-anchor="middle" fill="white" font-family="Nunito" font-weight="900" font-size="15">2026</text>
+      <text x="350" y="223" text-anchor="middle" fill="rgba(255,255,255,.75)" font-family="Nunito" font-weight="700" font-size="12">GOALS</text>
+
+      <!-- HEALTH branch (top-left) -->
+      <line x1="302" y1="178" x2="175" y2="105" stroke="#10b981" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="155" cy="95" r="38" fill="#10b981" opacity=".18" stroke="#10b981" stroke-width="1.5"/>
+      <text x="155" y="91" text-anchor="middle" fill="#10b981" font-family="Nunito" font-weight="800" font-size="13">Health</text>
+      <!-- sub items -->
+      <line x1="120" y1="80" x2="68" y2="55" stroke="#10b981" stroke-width="1.2" opacity=".6"/>
+      <text x="60" y="52" text-anchor="middle" fill="#a7f3d0" font-family="DM Sans" font-size="10">Run 3x/week</text>
+      <line x1="120" y1="95" x2="55" y2="95" stroke="#10b981" stroke-width="1.2" opacity=".6"/>
+      <text x="40" y="99" text-anchor="middle" fill="#a7f3d0" font-family="DM Sans" font-size="10">Sleep 7+ hrs</text>
+      <line x1="120" y1="110" x2="62" y2="130" stroke="#10b981" stroke-width="1.2" opacity=".6"/>
+      <text x="50" y="143" text-anchor="middle" fill="#a7f3d0" font-family="DM Sans" font-size="10">Gym membership</text>
+
+      <!-- SAVE MONEY (left) -->
+      <line x1="298" y1="210" x2="170" y2="210" stroke="#38bdf8" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="148" cy="210" r="38" fill="#38bdf8" opacity=".15" stroke="#38bdf8" stroke-width="1.5"/>
+      <text x="148" y="206" text-anchor="middle" fill="#38bdf8" font-family="Nunito" font-weight="800" font-size="12">Save</text>
+      <text x="148" y="220" text-anchor="middle" fill="#38bdf8" font-family="Nunito" font-weight="800" font-size="12">Money</text>
+      <line x1="112" y1="196" x2="60" y2="175" stroke="#38bdf8" stroke-width="1.2" opacity=".6"/>
+      <text x="38" y="172" text-anchor="middle" fill="#bae6fd" font-family="DM Sans" font-size="10">401(k)</text>
+      <line x1="112" y1="222" x2="55" y2="235" stroke="#38bdf8" stroke-width="1.2" opacity=".6"/>
+      <text x="38" y="239" text-anchor="middle" fill="#bae6fd" font-family="DM Sans" font-size="10">Side income</text>
+
+      <!-- CAREER (bottom-left) -->
+      <line x1="305" y1="242" x2="180" y2="315" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="158" cy="325" r="38" fill="#fbbf24" opacity=".15" stroke="#fbbf24" stroke-width="1.5"/>
+      <text x="158" y="321" text-anchor="middle" fill="#fbbf24" font-family="Nunito" font-weight="800" font-size="13">Career</text>
+      <line x1="122" y1="338" x2="65" y2="360" stroke="#fbbf24" stroke-width="1.2" opacity=".6"/>
+      <text x="45" y="363" text-anchor="middle" fill="#fde68a" font-family="DM Sans" font-size="10">New skill</text>
+      <line x1="120" y1="320" x2="58" y2="320" stroke="#fbbf24" stroke-width="1.2" opacity=".6"/>
+      <text x="36" y="324" text-anchor="middle" fill="#fde68a" font-family="DM Sans" font-size="10">LinkedIn</text>
+
+      <!-- FUN (top-right) -->
+      <line x1="398" y1="178" x2="522" y2="105" stroke="#ec4899" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="543" cy="95" r="38" fill="#ec4899" opacity=".15" stroke="#ec4899" stroke-width="1.5"/>
+      <text x="543" y="99" text-anchor="middle" fill="#ec4899" font-family="Nunito" font-weight="800" font-size="13">Fun</text>
+      <line x1="578" y1="80" x2="633" y2="55" stroke="#ec4899" stroke-width="1.2" opacity=".6"/>
+      <text x="645" y="52" text-anchor="middle" fill="#fbcfe8" font-family="DM Sans" font-size="10">Painting</text>
+      <line x1="580" y1="96" x2="638" y2="96" stroke="#ec4899" stroke-width="1.2" opacity=".6"/>
+      <text x="654" y="100" text-anchor="middle" fill="#fbcfe8" font-family="DM Sans" font-size="10">Hawaii trip</text>
+
+      <!-- FAMILY (right) -->
+      <line x1="402" y1="210" x2="530" y2="210" stroke="#f97316" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="552" cy="210" r="38" fill="#f97316" opacity=".15" stroke="#f97316" stroke-width="1.5"/>
+      <text x="552" y="206" text-anchor="middle" fill="#f97316" font-family="Nunito" font-weight="800" font-size="11">Family</text>
+      <text x="552" y="219" text-anchor="middle" fill="#f97316" font-family="Nunito" font-weight="800" font-size="11">& Friends</text>
+      <line x1="588" y1="196" x2="642" y2="175" stroke="#f97316" stroke-width="1.2" opacity=".6"/>
+      <text x="656" y="172" text-anchor="middle" fill="#fed7aa" font-family="DM Sans" font-size="10">Call weekly</text>
+      <line x1="588" y1="223" x2="642" y2="240" stroke="#f97316" stroke-width="1.2" opacity=".6"/>
+      <text x="660" y="243" text-anchor="middle" fill="#fed7aa" font-family="DM Sans" font-size="10">Birthdays</text>
+
+      <!-- MIND (bottom-right) -->
+      <line x1="395" y1="242" x2="518" y2="315" stroke="#a78bfa" stroke-width="2.5" stroke-linecap="round"/>
+      <circle cx="540" cy="325" r="38" fill="#a78bfa" opacity=".15" stroke="#a78bfa" stroke-width="1.5"/>
+      <text x="540" y="329" text-anchor="middle" fill="#a78bfa" font-family="Nunito" font-weight="800" font-size="13">Mind</text>
+      <line x1="576" y1="312" x2="634" y2="290" stroke="#a78bfa" stroke-width="1.2" opacity=".6"/>
+      <text x="648" y="287" text-anchor="middle" fill="#ddd6fe" font-family="DM Sans" font-size="10">Read monthly</text>
+      <line x1="576" y1="330" x2="636" y2="330" stroke="#a78bfa" stroke-width="1.2" opacity=".6"/>
+      <text x="652" y="334" text-anchor="middle" fill="#ddd6fe" font-family="DM Sans" font-size="10">Meditate</text>
+      <line x1="576" y1="346" x2="634" y2="365" stroke="#a78bfa" stroke-width="1.2" opacity=".6"/>
+      <text x="652" y="368" text-anchor="middle" fill="#ddd6fe" font-family="DM Sans" font-size="10">Take breaks</text>
+
+      <!-- Annotation callouts -->
+      <rect x="220" y="12" width="128" height="30" rx="8" fill="rgba(124,58,237,.25)" stroke="rgba(124,58,237,.5)" stroke-width="1"/>
+      <text x="284" y="31" text-anchor="middle" fill="white" font-family="Nunito" font-weight="700" font-size="11">Main idea in center</text>
+      <line x1="320" y1="42" x2="335" y2="162" stroke="rgba(255,255,255,.3)" stroke-width="1" stroke-dasharray="4,3"/>
+
+      <rect x="10" y="195" width="50" height="28" rx="7" fill="rgba(56,189,248,.2)" stroke="rgba(56,189,248,.5)" stroke-width="1"/>
+      <text x="35" y="213" text-anchor="middle" fill="white" font-family="Nunito" font-weight="700" font-size="10">Branch</text>
+
+      <rect x="600" y="130" width="90" height="28" rx="7" fill="rgba(249,115,22,.2)" stroke="rgba(249,115,22,.5)" stroke-width="1"/>
+      <text x="645" y="148" text-anchor="middle" fill="white" font-family="Nunito" font-weight="700" font-size="10">Sub-details</text>
+    </svg>
+  </div>
+
+  <div style="display:flex;gap:.6rem;flex-wrap:wrap;">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.7rem 1rem;font-size:.86rem;color:var(--muted);flex:1;min-width:180px;">
+      <strong style="color:var(--text);">Center:</strong> Your main topic — the whole point of the map.
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.7rem 1rem;font-size:.86rem;color:var(--muted);flex:1;min-width:180px;">
+      <strong style="color:var(--text);">Branches:</strong> Your 4 main categories — one per branch, one color each.
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:.7rem 1rem;font-size:.86rem;color:var(--muted);flex:1;min-width:180px;">
+      <strong style="color:var(--text);">Sub-details:</strong> 2 to 3 short facts under each branch.
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- HOW TO BUILD -->
+<section class="section" id="build" style="background:var(--bg2);">
+<div class="inner">
+  <div class="sec-eyebrow">Build one</div>
+  <h2 class="sec-title">How to build a mind map</h2>
+  <p class="sec-body">Every mind map follows the same 4-step structure. Get these right and yours will look professional every time.</p>
+
+  <div class="steps">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div>
+        <div class="step-title">Start with your main idea in the center</div>
+        <div class="step-body">Write your whole topic in the middle of the page inside a circle or bubble. This is your anchor — everything else connects back to it.</div>
+        <div class="step-tip">For your assignment: write <em>Computer Parts</em> in the center.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div>
+        <div class="step-title">Branch out your main topics</div>
+        <div class="step-body">Draw 4 lines out from the center — one for each main category. Each branch gets its own color. Write one keyword on each line.</div>
+        <div class="step-tip">Think: what are the 4 biggest categories from your outline notes?</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div>
+        <div class="step-title">Add facts under each topic</div>
+        <div class="step-body">From each branch, draw 2 to 3 smaller lines. On each one, write a short fact — just 2 to 5 words. No full sentences. Keywords only.</div>
+        <div class="step-tip">If you need 10 words to say it, cut it to 4. Your brain will fill in the rest.</div>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div>
+        <div class="step-title">Add a picture to each branch</div>
+        <div class="step-body">Draw or paste a small image near each main branch. It does not have to be perfect — even a stick figure helps your brain remember the information.</div>
+        <div class="step-tip">For the assignment: use clip art in Canva. One image per branch.</div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- STRONG VS WEAK -->
+<section class="section" id="compare">
+<div class="inner">
+  <div class="sec-eyebrow">Good vs bad</div>
+  <h2 class="sec-title">Strong vs Weak mind maps</h2>
+  <p class="sec-body">Two students mapped the same notes about the four seasons. One is useful. One is pointless. Can you spot the difference?</p>
+
+  <div class="compare">
+    <div class="comp-card strong">
+      <div class="comp-label s">Strong — keeps the details</div>
+      <svg class="comp-svg" viewBox="0 0 290 260" xmlns="http://www.w3.org/2000/svg">
+        <rect width="290" height="260" fill="#1e1540" rx="10"/>
+        <!-- Center -->
+        <circle cx="145" cy="130" r="36" fill="#7c3aed" opacity=".85"/>
+        <text x="145" y="134" text-anchor="middle" fill="white" font-family="Nunito" font-weight="900" font-size="13">Seasons</text>
+        <!-- Summer -->
+        <line x1="113" y1="106" x2="62" y2="60" stroke="#f97316" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="48" cy="50" r="28" fill="rgba(249,115,22,.18)" stroke="#f97316" stroke-width="1.5"/>
+        <text x="48" y="47" text-anchor="middle" fill="#f97316" font-family="Nunito" font-weight="800" font-size="11">Summer</text>
+        <line x1="22" y1="36" x2="6" y2="18" stroke="#f97316" stroke-width="1" opacity=".6"/>
+        <text x="4" y="13" text-anchor="start" fill="#fed7aa" font-family="DM Sans" font-size="8.5">Solstice=longest day</text>
+        <line x1="20" y1="50" x2="2" y2="52" stroke="#f97316" stroke-width="1" opacity=".6"/>
+        <text x="0" y="56" text-anchor="start" fill="#fed7aa" font-family="DM Sans" font-size="8.5">Thunderstorms+UV</text>
+        <!-- Winter -->
+        <line x1="113" y1="154" x2="62" y2="198" stroke="#38bdf8" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="48" cy="210" r="28" fill="rgba(56,189,248,.15)" stroke="#38bdf8" stroke-width="1.5"/>
+        <text x="48" y="207" text-anchor="middle" fill="#38bdf8" font-family="Nunito" font-weight="800" font-size="11">Winter</text>
+        <line x1="22" y1="222" x2="4" y2="238" stroke="#38bdf8" stroke-width="1" opacity=".6"/>
+        <text x="2" y="244" text-anchor="start" fill="#bae6fd" font-family="DM Sans" font-size="8.5">Coldest+wind chill</text>
+        <line x1="20" y1="210" x2="2" y2="210" stroke="#38bdf8" stroke-width="1" opacity=".6"/>
+        <text x="0" y="214" text-anchor="start" fill="#bae6fd" font-family="DM Sans" font-size="8.5">Shortest day</text>
+        <!-- Spring -->
+        <line x1="177" y1="106" x2="228" y2="60" stroke="#10b981" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="242" cy="50" r="28" fill="rgba(16,185,129,.15)" stroke="#10b981" stroke-width="1.5"/>
+        <text x="242" y="54" text-anchor="middle" fill="#10b981" font-family="Nunito" font-weight="800" font-size="11">Spring</text>
+        <line x1="266" y1="36" x2="282" y2="18" stroke="#10b981" stroke-width="1" opacity=".6"/>
+        <text x="284" y="13" text-anchor="end" fill="#a7f3d0" font-family="DM Sans" font-size="8.5">Vernal equinox</text>
+        <line x1="268" y1="50" x2="286" y2="52" stroke="#10b981" stroke-width="1" opacity=".6"/>
+        <text x="288" y="56" text-anchor="end" fill="#a7f3d0" font-family="DM Sans" font-size="8.5">Tulips+daffodils</text>
+        <!-- Fall -->
+        <line x1="177" y1="154" x2="228" y2="198" stroke="#fbbf24" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="242" cy="210" r="28" fill="rgba(251,191,36,.15)" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="242" y="214" text-anchor="middle" fill="#fbbf24" font-family="Nunito" font-weight="800" font-size="11">Fall</text>
+        <line x1="266" y1="222" x2="282" y2="238" stroke="#fbbf24" stroke-width="1" opacity=".6"/>
+        <text x="288" y="244" text-anchor="end" fill="#fde68a" font-family="DM Sans" font-size="8.5">Leaves+pigment</text>
+        <line x1="268" y1="210" x2="286" y2="210" stroke="#fbbf24" stroke-width="1" opacity=".6"/>
+        <text x="288" y="214" text-anchor="end" fill="#fde68a" font-family="DM Sans" font-size="8.5">Apple picking</text>
+      </svg>
+      <p style="font-size:.82rem;color:var(--mint);line-height:1.5;margin-top:.5rem;">Each branch has 2 short facts. If you lost the original notes, this map still teaches you something.</p>
+    </div>
+    <div class="comp-card weak">
+      <div class="comp-label w">Weak — just single words</div>
+      <svg class="comp-svg" viewBox="0 0 290 260" xmlns="http://www.w3.org/2000/svg">
+        <rect width="290" height="260" fill="#1e1540" rx="10"/>
+        <circle cx="145" cy="130" r="36" fill="#4a1942" opacity=".85" stroke="rgba(239,68,68,.4)" stroke-width="1"/>
+        <text x="145" y="134" text-anchor="middle" fill="#fca5a5" font-family="Nunito" font-weight="900" font-size="13">Seasons</text>
+        <line x1="113" y1="106" x2="65" y2="60" stroke="rgba(239,68,68,.5)" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="52" cy="50" r="25" fill="rgba(239,68,68,.08)" stroke="rgba(239,68,68,.3)" stroke-width="1"/>
+        <text x="52" y="54" text-anchor="middle" fill="#fca5a5" font-family="Nunito" font-weight="800" font-size="11">Fall</text>
+        <line x1="113" y1="154" x2="65" y2="200" stroke="rgba(239,68,68,.5)" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="52" cy="210" r="25" fill="rgba(239,68,68,.08)" stroke="rgba(239,68,68,.3)" stroke-width="1"/>
+        <text x="52" y="214" text-anchor="middle" fill="#fca5a5" font-family="Nunito" font-weight="800" font-size="11">Winter</text>
+        <line x1="177" y1="106" x2="225" y2="60" stroke="rgba(239,68,68,.5)" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="238" cy="50" r="25" fill="rgba(239,68,68,.08)" stroke="rgba(239,68,68,.3)" stroke-width="1"/>
+        <text x="238" y="54" text-anchor="middle" fill="#fca5a5" font-family="Nunito" font-weight="800" font-size="11">Spring</text>
+        <line x1="177" y1="154" x2="225" y2="200" stroke="rgba(239,68,68,.5)" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="238" cy="210" r="25" fill="rgba(239,68,68,.08)" stroke="rgba(239,68,68,.3)" stroke-width="1"/>
+        <text x="238" y="214" text-anchor="middle" fill="#fca5a5" font-family="Nunito" font-weight="800" font-size="11">Summer</text>
+        <!-- X marks -->
+        <text x="145" y="68" text-anchor="middle" fill="#ef4444" font-family="Nunito" font-weight="900" font-size="22">✕</text>
+        <text x="105" y="180" text-anchor="middle" fill="#ef4444" font-family="Nunito" font-weight="900" font-size="16">✕</text>
+        <text x="185" y="88" text-anchor="middle" fill="#ef4444" font-family="Nunito" font-weight="900" font-size="16">✕</text>
+        <text x="185" y="175" text-anchor="middle" fill="#ef4444" font-family="Nunito" font-weight="900" font-size="16">✕</text>
+        <text x="105" y="88" text-anchor="middle" fill="#ef4444" font-family="Nunito" font-weight="900" font-size="16">✕</text>
+      </svg>
+      <p style="font-size:.82rem;color:#f87171;line-height:1.5;margin-top:.5rem;">Only branch labels, no details. A week later you will have no idea what you were supposed to learn. This is just a list with extra steps.</p>
+    </div>
+  </div>
+
+  <div style="background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.3);border-radius:14px;padding:1.1rem 1.4rem;">
+    <p style="font-size:.95rem;line-height:1.7;"><strong style="color:var(--violet);">The rule:</strong> If you lost your original notes and only had the mind map, could you still understand the topic? If yes — it is strong. If no — add more facts.</p>
+  </div>
+</div>
+</section>
+
+<!-- PRACTICE QUIZ -->
+<section class="section" id="practice" style="background:var(--bg2);">
+<div class="inner">
+  <div class="sec-eyebrow">Check your understanding</div>
+  <h2 class="sec-title">Quick check</h2>
+  <p class="sec-body">Let's make sure you know the rules before you build your own.</p>
+
+  <div class="quiz-section">
+    <h3>Mind Map Rules Quiz</h3>
+    <p class="quiz-sub">Click an answer. You get feedback right away.</p>
+    <div id="quiz-container"></div>
+    <div class="score-bar">
+      <div class="score-display" id="quiz-score">🎬 0 / 10</div>
+      <div class="score-kernels" id="quiz-kernels">🫙🫙🫙🫙🫙🫙🫙🫙🫙🫙</div>
+      <button class="reset-btn" onclick="resetQuiz()">Try again</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- INTERACTIVE BUILDER -->
+<section class="section" id="builder" style="min-height:auto;padding:4rem 0;">
+<div class="inner">
+  <div class="sec-eyebrow">Try it yourself</div>
+  <h2 class="sec-title">Build a mind map right here</h2>
+  <p class="sec-body">Practice before you go to Canva. Click a node to select it, then use the controls below to add branches and type your own content.</p>
+
+  <div class="builder-wrap">
+    <canvas id="map-canvas" width="800" height="480"></canvas>
+    <div class="builder-controls">
+      <button class="ctrl-btn" id="btn-add-branch" onclick="addBranch()">+ Add branch</button>
+      <button class="ctrl-btn" id="btn-add-detail" onclick="addDetail()">+ Add detail</button>
+      <button class="ctrl-btn" id="btn-rename" onclick="renameNode()">Rename selected</button>
+      <button class="ctrl-btn" id="btn-delete" onclick="deleteNode()">Remove</button>
+      <button class="ctrl-btn" id="btn-reset-map" onclick="resetMap()">Start over</button>
+      <div class="builder-hint" id="builder-hint">Click any bubble to select it</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:.8rem;margin-top:1rem;">
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.9rem;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:.3rem;">1</div>
+      <div style="font-size:.82rem;color:var(--muted);">Click a bubble to select it (it glows)</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.9rem;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:.3rem;">2</div>
+      <div style="font-size:.82rem;color:var(--muted);">Hit "Add branch" to grow it outward</div>
+    </div>
+    <div style="background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:.9rem;text-align:center;">
+      <div style="font-size:1.5rem;margin-bottom:.3rem;">3</div>
+      <div style="font-size:.82rem;color:var(--muted);">Double-click any bubble to rename it</div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- YOUR TASK -->
+<section class="section" id="task">
+<div class="inner">
+  <div class="sec-eyebrow">Your assignment</div>
+  <h2 class="sec-title">Now do it in Canva</h2>
+  <p class="sec-body">Take your Computer Parts outline notes and turn them into a mind map. Here is exactly what to do:</p>
+
+  <div class="canva-steps">
+    <div class="canva-step">
+      <div class="canva-num">1</div>
+      <div class="canva-text">Open Canva and start a <strong>Landscape Flyer</strong> template.</div>
+    </div>
+    <div class="canva-step">
+      <div class="canva-num">2</div>
+      <div class="canva-text">Put <strong>Computer Parts</strong> in a bubble in the center of the page.</div>
+    </div>
+    <div class="canva-step">
+      <div class="canva-num">3</div>
+      <div class="canva-text">Branch out your <strong>4 main topics</strong> from your outline notes — one per branch, each a different color.</div>
+    </div>
+    <div class="canva-step">
+      <div class="canva-num">4</div>
+      <div class="canva-text">Add <strong>2 to 3 key facts</strong> (short keywords, not sentences) under each branch.</div>
+    </div>
+    <div class="canva-step">
+      <div class="canva-num">5</div>
+      <div class="canva-text">Add <strong>one clip-art image</strong> near each branch. Black and white only — no photos, no color images.</div>
+    </div>
+  </div>
+
+  <div style="background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.3);border-radius:14px;padding:1.2rem 1.4rem;margin-top:1.2rem;">
+    <p style="font-family:'Nunito',sans-serif;font-weight:800;color:var(--violet);margin-bottom:.4rem;">Before you submit — ask yourself:</p>
+    <ul style="list-style:none;display:flex;flex-direction:column;gap:.5rem;">
+      <li style="font-size:.92rem;color:var(--text);">If I lost my outline notes, could I still understand Computer Parts from this map alone?</li>
+      <li style="font-size:.92rem;color:var(--text);">Did I use <strong>keywords only</strong> — no full sentences anywhere?</li>
+      <li style="font-size:.92rem;color:var(--text);">Does each branch have a <strong>different color</strong>?</li>
+      <li style="font-size:.92rem;color:var(--text);">Is there <strong>one clip-art image</strong> per branch?</li>
+    </ul>
+  </div>
+</div>
+</section>
+
+<script>
+// ── NAV SCROLL TRACKING ──────────────────────────────────────────────────
+function goTo(id) {
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+const sections = ['hero','what','see','build','compare','practice','builder','task'];
+const navBtns = document.querySelectorAll('.nav-btn');
+window.addEventListener('scroll', () => {
+  let cur = 'hero';
+  sections.forEach(id => {
+    const el = document.getElementById(id);
+    if (el && window.scrollY >= el.offsetTop - 120) cur = id;
+  });
+  navBtns.forEach((b,i) => b.classList.toggle('active', sections[i]===cur));
+}, {passive:true});
+
+// ── HERO CANVAS — animated mind map lines ───────────────────────────────
+(function(){
+  const c = document.getElementById('hero-canvas');
+  const ctx = c.getContext('2d');
+  let w, h, nodes=[], t=0;
+  function resize(){ w=c.width=c.offsetWidth; h=c.height=c.offsetHeight; }
+  resize(); window.addEventListener('resize',resize);
+
+  const colors=['#7c3aed','#10b981','#f97316','#38bdf8','#ec4899','#fbbf24','#a78bfa'];
+  function mkNode(cx,cy,px,py,depth,color){
+    return {cx,cy,px,py,depth,color,
+      alpha:0,children:[],
+      born: t + Math.random()*120
+    };
+  }
+  function init(){
+    nodes=[];
+    const cx=w/2,cy=h/2;
+    const angles=[45,115,190,260,320,20];
+    angles.forEach((a,i)=>{
+      const r=110,rad=a*Math.PI/180;
+      const bx=cx+r*Math.cos(rad), by=cy+r*Math.sin(rad);
+      const n=mkNode(bx,by,cx,cy,1,colors[i%colors.length]);
+      n.born=t+i*40;
+      const r2=70, angles2=[a-30,a+30];
+      angles2.forEach(a2=>{
+        const rad2=a2*Math.PI/180;
+        const c2=mkNode(bx+r2*Math.cos(rad2),by+r2*Math.sin(rad2),bx,by,2,n.color);
+        c2.born=n.born+60+Math.random()*40;
+        n.children.push(c2);
+      });
+      nodes.push(n);
+    });
+  }
+  init();
+
+  function draw(){
+    ctx.clearRect(0,0,w,h);
+    t++;
+
+    // center circle
+    const pulse=0.04*Math.sin(t*0.03);
+    ctx.beginPath();
+    ctx.arc(w/2,h/2,38+pulse*5,0,Math.PI*2);
+    ctx.fillStyle='rgba(124,58,237,0.25)';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(w/2,h/2,26,0,Math.PI*2);
+    ctx.fillStyle='rgba(124,58,237,0.5)';
+    ctx.fill();
+
+    nodes.forEach(n=>{
+      n.alpha=Math.min(1,(t-n.born)/40);
+      if(n.alpha<=0) return;
+      // line to parent
+      ctx.beginPath();
+      ctx.moveTo(n.px,n.py);
+      ctx.lineTo(n.cx,n.cy);
+      ctx.strokeStyle=n.color;
+      ctx.globalAlpha=n.alpha*0.6;
+      ctx.lineWidth=1.5;
+      ctx.stroke();
+      ctx.globalAlpha=1;
+      // dot
+      ctx.beginPath();
+      ctx.arc(n.cx,n.cy,n.depth===1?16:9,0,Math.PI*2);
+      ctx.fillStyle=n.color;
+      ctx.globalAlpha=n.alpha*0.3;
+      ctx.fill();
+      ctx.globalAlpha=1;
+
+      n.children.forEach(ch=>{
+        ch.alpha=Math.min(1,(t-ch.born)/40);
+        if(ch.alpha<=0) return;
+        ctx.beginPath();
+        ctx.moveTo(n.cx,n.cy);
+        ctx.lineTo(ch.cx,ch.cy);
+        ctx.strokeStyle=ch.color;
+        ctx.globalAlpha=ch.alpha*0.4;
+        ctx.lineWidth=1;
+        ctx.stroke();
+        ctx.globalAlpha=1;
+        ctx.beginPath();
+        ctx.arc(ch.cx,ch.cy,5,0,Math.PI*2);
+        ctx.fillStyle=ch.color;
+        ctx.globalAlpha=ch.alpha*0.4;
+        ctx.fill();
+        ctx.globalAlpha=1;
+      });
+    });
+
+    // reset when all done
+    const allOld = nodes.every(n=>n.alpha>=1 && n.children.every(c=>c.alpha>=1));
+    if(allOld && t - nodes[nodes.length-1].children.at(-1).born > 200) {
+      t=0; init();
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+})();
+
+// ── QUIZ ENGINE ──────────────────────────────────────────────────────────
+const quizData = [
+  {q:"Where does the main idea go on a mind map?",opts:["Top-left corner","Bottom of the page","The center","The first branch"],ans:"The center",exp:"The main topic always goes in the center — everything else branches out from it."},
+  {q:"You are writing notes for a mind map. Which is the best way to write a fact?",opts:["Photosynthesis is the process by which plants use sunlight to make food.","Plants use sunlight → food","Photosynthesis","Photosynthesis — plants, sunlight, food, chlorophyll, energy"],ans:"Plants use sunlight → food",exp:"Keywords only — short and specific, but still meaningful. Not just one word, not a full sentence."},
+  {q:"Why do you use different colors for each branch?",opts:["To make it look pretty","To help your brain group and separate ideas","Because the teacher requires it","Colors help you write faster"],ans:"To help your brain group and separate ideas",exp:"Color is a tool, not decoration. Each color signals a different category, making your brain sort information faster when you review."},
+  {q:"A student made a mind map that only has the branch labels — no details under any of them. What is the problem?",opts:["The map has too many colors","The main idea is missing","Without details, the map teaches nothing — it is just a list","The branches are too long"],ans:"Without details, the map teaches nothing — it is just a list",exp:"Branch labels alone are just a table of contents. You need 2 to 3 short facts per branch for the map to actually be useful."},
+  {q:"How many main branches should a mind map typically have?",opts:["As many as possible","1 to 2","Around 4","At least 10"],ans:"Around 4",exp:"About 4 main branches is the sweet spot. More than that gets crowded and hard to read. Each branch represents one major category."},
+  {q:"Which of these is the best detail to put under a 'Summer' branch?",opts:["Summer","Season","Solstice = longest day, most thunderstorms","Summer is hot and people go to the movies"],ans:"Solstice = longest day, most thunderstorms",exp:"Short, specific, and packed with meaning. Not a full sentence, but not just one empty word either."},
+  {q:"Why do you add a small picture or image to each branch?",opts:["It fills up empty space","Images help your brain remember the information better","Pictures replace the need for facts","The rubric requires it"],ans:"Images help your brain remember the information better",exp:"Your brain processes images much faster than words. A small visual next to a branch doubles how much of that information you will actually remember."},
+  {q:"Your friend says, 'I don't need to add details — just the topic names.' What do you tell them?",opts:["That works if you use enough colors","Topic names alone are a weak map — you need short facts under each branch","Only add details if you have time","Details go in the center, not on branches"],ans:"Topic names alone are a weak map — you need short facts under each branch",exp:"A map with only labels is like a map with only city names and no roads. You know what is there but not how to actually use the information."},
+  {q:"You are making a mind map about 'Computer Parts.' What goes in the very center?",opts:["CPU","Computer Parts","External Devices","Ports"],ans:"Computer Parts",exp:"The center holds your WHOLE topic — the biggest umbrella idea. Specific categories like CPU or External Devices are branches."},
+  {q:"Which describes a STRONG mind map?",opts:["Has every detail from the original notes word for word","Uses full sentences so nothing is missed","Short keywords + facts per branch so you could still understand the topic without the original notes","Just branch names, drawn very neatly"],ans:"Short keywords + facts per branch so you could still understand the topic without the original notes",exp:"The test of a strong mind map: if you lost the original notes, could you still learn the topic from the map? If yes — it is strong."},
+];
+
+let qScores = 0, qAnswered = new Set();
+function buildQuiz() {
+  qScores = 0; qAnswered = new Set();
+  const c = document.getElementById('quiz-container');
+  c.innerHTML = '';
+  quizData.forEach((item,i) => {
+    const d = document.createElement('div');
+    d.className='qq'; d.id=`q-${i}`;
+    const shuffled=[...item.opts].sort(()=>Math.random()-.5);
+    d.innerHTML=`
+      <div class="qq-num-text">
+        <div class="qq-num">${i+1}</div>
+        <div class="qq-text">${item.q}</div>
+      </div>
+      <div class="qq-opts">${shuffled.map(o=>
+        `<button class="qq-opt" onclick="ansQ(${i},'${o.replace(/'/g,"\\'")}',this)"
+          data-val="${o.replace(/"/g,'&quot;').replace(/'/g,'&#39;')}">${o}</button>`
+      ).join('')}</div>
+      <div class="qq-exp" id="qe-${i}"></div>`;
+    d.querySelectorAll('.qq-opt').forEach(btn=>{
+      btn.addEventListener('click',function(){
+        const idx=parseInt(this.dataset.idx);
+        const val=this.dataset.val;
+        ansQ(idx,val,this);
+      });
+    });
+    c.appendChild(d);
+  });
+  updateScore();
+}
+function ansQ(i,chosen,btn){
+  if(qAnswered.has(i)) return;
+  qAnswered.add(i);
+  // decode HTML entities for comparison
+  const dec=document.createElement('textarea');
+  dec.innerHTML=chosen; chosen=dec.value;
+  const item=quizData[i];
+  const qDiv=document.getElementById(`q-${i}`);
+  const exp=document.getElementById(`qe-${i}`);
+  qDiv.querySelectorAll('.qq-opt').forEach(b=>{
+    b.disabled=true;
+    const dec2=document.createElement('textarea');dec2.innerHTML=b.dataset.val;
+    if(dec2.value===item.ans) b.classList.add('opt-correct');
+  });
+  const ok=(chosen===item.ans);
+  if(ok){btn.classList.add('opt-correct');qDiv.classList.add('q-correct');qScores++;}
+  else{btn.classList.add('opt-wrong');qDiv.classList.add('q-wrong');
+    qDiv.querySelectorAll('.qq-opt').forEach(b=>{const d3=document.createElement('textarea');d3.innerHTML=b.dataset.val;if(d3.value===item.ans)b.classList.add('opt-reveal');});
+  }
+  exp.className='qq-exp show '+(ok?'correct':'wrong');
+  exp.innerHTML=(ok?'✅ ':'❌ ')+item.exp;
+  updateScore();
+}
+function updateScore(){
+  const t=quizData.length;
+  document.getElementById('quiz-score').textContent=`🎬 ${qScores} / ${t}`;
+  document.getElementById('quiz-kernels').textContent=
+    '🍿'.repeat(qScores)+'🫙'.repeat(t-qScores);
+}
+function resetQuiz(){ buildQuiz(); }
+buildQuiz();
+
+// ── INTERACTIVE MAP BUILDER ──────────────────────────────────────────────
+const mc = document.getElementById('map-canvas');
+const mctx = mc.getContext('2d');
+const BRANCH_COLORS=['#7c3aed','#10b981','#f97316','#38bdf8','#ec4899','#fbbf24','#a78bfa','#f43f5e'];
+let mapNodes=[], selectedId=null, mapFrame;
+
+function initMap(){
+  const dpr=window.devicePixelRatio||1;
+  const cw=mc.offsetWidth||800;
+  const ch=mc.offsetHeight||480;
+  mc.width=cw*dpr;
+  mc.height=ch*dpr;
+  mctx.setTransform(1,0,0,1,0,0);
+  mctx.scale(dpr,dpr);
+  const w=cw,h=ch;
+  mapNodes=[{id:0,label:'Main Idea',x:w/2,y:h/2,parent:null,color:'#7c3aed',radius:42,depth:0,children:[]}];
+  selectedId=null;
+  renderMap();
+}
+
+function getNode(id){ return mapNodes.find(n=>n.id===id); }
+function nextId(){ return Math.max(...mapNodes.map(n=>n.id))+1; }
+
+function getAngleForNewChild(parent){
+  const siblings=mapNodes.filter(n=>n.parent===parent.id);
+  const baseAngles=[225,315,45,135,180,0,270,90];
+  const used=siblings.map(s=>Math.atan2(s.y-parent.y,s.x-parent.x)*180/Math.PI);
+  for(const a of baseAngles){
+    const rad=a*Math.PI/180;
+    if(used.every(u=>Math.abs(((u-a+540)%360)-180)>30)) return rad;
+  }
+  return (siblings.length*55)*Math.PI/180;
+}
+
+function addBranch(){
+  const sel=selectedId!==null?getNode(selectedId):getNode(0);
+  if(!sel){document.getElementById('builder-hint').textContent='Select a bubble first';return;}
+  const depth=sel.depth+1;
+  if(depth>2){document.getElementById('builder-hint').textContent='Max 2 levels deep — add a detail instead';return;}
+  const rad=getAngleForNewChild(sel);
+  const dist=depth===1?130:80;
+  const nx=sel.x+Math.cos(rad)*dist, ny=sel.y+Math.sin(rad)*dist;
+  const color=depth===1?BRANCH_COLORS[(mapNodes.filter(n=>n.depth===1).length)%BRANCH_COLORS.length]:sel.color;
+  const nid=nextId();
+  mapNodes.push({id:nid,label:depth===1?'Topic':'Detail',x:nx,y:ny,parent:sel.id,color,radius:depth===1?32:22,depth,children:[]});
+  sel.children.push(nid);
+  selectedId=nid;
+  renderMap();
+  document.getElementById('builder-hint').textContent='Double-click the new bubble to rename it';
+}
+
+function addDetail(){
+  if(selectedId===null){document.getElementById('builder-hint').textContent='Select a branch bubble first';return;}
+  const sel=getNode(selectedId);
+  if(!sel||sel.depth===0){document.getElementById('builder-hint').textContent='Select a branch (not the center) to add a detail';return;}
+  const rad=getAngleForNewChild(sel);
+  const nid=nextId();
+  const nx=sel.x+Math.cos(rad)*70, ny=sel.y+Math.sin(rad)*70;
+  mapNodes.push({id:nid,label:'detail',x:nx,y:ny,parent:sel.id,color:sel.color,radius:20,depth:sel.depth+1,children:[]});
+  sel.children.push(nid);
+  selectedId=nid;
+  renderMap();
+}
+
+function renameNode(){
+  if(selectedId===null){document.getElementById('builder-hint').textContent='Select a bubble first';return;}
+  const n=getNode(selectedId);
+  if(!n) return;
+  const label=prompt('Type a new label (keep it short — keywords only!)',n.label);
+  if(label&&label.trim()){n.label=label.trim();renderMap();}
+}
+
+function deleteNode(){
+  if(selectedId===null||selectedId===0){document.getElementById('builder-hint').textContent='Cannot remove the center node';return;}
+  const removeTree=id=>{
+    const n=getNode(id);if(!n)return;
+    n.children.forEach(removeTree);
+    const idx=mapNodes.findIndex(x=>x.id===id);
+    if(idx>-1)mapNodes.splice(idx,1);
+  };
+  const n=getNode(selectedId);
+  if(n&&n.parent!==null){
+    const p=getNode(n.parent);
+    if(p) p.children=p.children.filter(c=>c!==selectedId);
+  }
+  removeTree(selectedId);
+  selectedId=null;
+  renderMap();
+}
+
+function resetMap(){ initMap(); }
+
+function renderMap(){
+  const w=mc.offsetWidth,h=mc.offsetHeight;
+  mctx.clearRect(0,0,w,h);
+  // lines first
+  mapNodes.forEach(n=>{
+    if(n.parent===null) return;
+    const p=getNode(n.parent);if(!p)return;
+    mctx.beginPath();
+    mctx.moveTo(p.x,p.y); mctx.lineTo(n.x,n.y);
+    mctx.strokeStyle=n.color;
+    mctx.lineWidth=n.depth===1?2.5:1.5;
+    mctx.globalAlpha=.7;
+    mctx.stroke();
+    mctx.globalAlpha=1;
+  });
+  // nodes
+  mapNodes.forEach(n=>{
+    const sel=n.id===selectedId;
+    // glow
+    if(sel){
+      mctx.beginPath();
+      mctx.arc(n.x,n.y,n.radius+10,0,Math.PI*2);
+      mctx.fillStyle=n.color;
+      mctx.globalAlpha=.2;
+      mctx.fill();
+      mctx.globalAlpha=1;
+    }
+    // fill
+    mctx.beginPath();
+    mctx.arc(n.x,n.y,n.radius,0,Math.PI*2);
+    mctx.fillStyle=n.depth===0?n.color:`rgba(${hexToRgb(n.color)},.2)`;
+    mctx.fill();
+    // border
+    mctx.beginPath();
+    mctx.arc(n.x,n.y,n.radius,0,Math.PI*2);
+    mctx.strokeStyle=n.color;
+    mctx.lineWidth=sel?2.5:1.5;
+    mctx.globalAlpha=sel?1:.75;
+    mctx.stroke();
+    mctx.globalAlpha=1;
+    // label
+    mctx.fillStyle=n.depth===0?'white':n.color;
+    mctx.font=`${n.depth===0?'700':'600'} ${n.depth===0?13:11}px Nunito,sans-serif`;
+    mctx.textAlign='center';
+    mctx.textBaseline='middle';
+    // wrap long labels
+    const words=n.label.split(' ');
+    if(words.length<=2||n.radius<25){
+      mctx.fillText(n.label,n.x,n.y,n.radius*1.7);
+    } else {
+      const mid=Math.ceil(words.length/2);
+      mctx.fillText(words.slice(0,mid).join(' '),n.x,n.y-7,n.radius*1.7);
+      mctx.fillText(words.slice(mid).join(' '),n.x,n.y+7,n.radius*1.7);
+    }
+  });
+}
+
+function hexToRgb(hex){
+  const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  return `${r},${g},${b}`;
+}
+
+// Click to select
+mc.addEventListener('click',e=>{
+  const rect=mc.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  let hit=null;
+  mapNodes.forEach(n=>{
+    const dx=n.x-mx,dy=n.y-my;
+    if(Math.sqrt(dx*dx+dy*dy)<=n.radius+6) hit=n.id;
+  });
+  selectedId=hit;
+  document.getElementById('builder-hint').textContent=
+    hit!==null ? `"${getNode(hit).label}" selected — use buttons below` : 'Click any bubble to select it';
+  renderMap();
+});
+
+// Double-click to rename
+mc.addEventListener('dblclick',e=>{
+  const rect=mc.getBoundingClientRect();
+  const mx=e.clientX-rect.left, my=e.clientY-rect.top;
+  mapNodes.forEach(n=>{
+    const dx=n.x-mx,dy=n.y-my;
+    if(Math.sqrt(dx*dx+dy*dy)<=n.radius+6){
+      selectedId=n.id;
+      const label=prompt('Rename this bubble (keywords only!)',n.label);
+      if(label&&label.trim()){n.label=label.trim();renderMap();}
+    }
+  });
+});
+
+// Touch support
+mc.addEventListener('touchend',e=>{
+  e.preventDefault();
+  const t=e.changedTouches[0];
+  const rect=mc.getBoundingClientRect();
+  const mx=t.clientX-rect.left, my=t.clientY-rect.top;
+  let hit=null;
+  mapNodes.forEach(n=>{
+    const dx=n.x-mx,dy=n.y-my;
+    if(Math.sqrt(dx*dx+dy*dy)<=n.radius+8) hit=n.id;
+  });
+  selectedId=hit;
+  renderMap();
+});
+
+window.addEventListener('resize',()=>{ setTimeout(initMap,50); });
+
+// defer map init until canvas is visible/sized
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(initMap, 100); // slight delay ensures canvas has layout dimensions
+});
+</script>
+</body>
+</html>
